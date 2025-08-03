@@ -130,19 +130,21 @@
       }
     }
 
-    // Pasar al siguiente nivel
-    function nextLevel() {
-      if (currentLevel === 10) {
-        alert("¡Felicidades! Completaste todos los niveles 🏆🎉");
-        return;
-      }
-      foundCount = 0;  // Reiniciamos el contador de objetos encontrados
-      currentLevel++;  // Aumentamos el nivel
-      targetCount = currentLevel;  // El objetivo es igual al nivel (nivel 1 = 1, nivel 2 = 2, etc.)
-      document.getElementById("levelUp").classList.add("hidden");  // Ocultamos el botón de nivel siguiente
-      document.getElementById("levelText").innerText = `Nivel ${currentLevel}: Encuentra ${targetCount} 🐱`;  // Actualizamos el texto del nivel
-      generateItems(currentLevel);  // Generamos los objetos para el siguiente nivel
-    }
+  function nextLevel() {
+  // Si llegamos al nivel 10, mostramos un mensaje final y redirigimos al index
+  if (currentLevel === 10) {
+    alert("¡Felicidades! Completaste todos los niveles 🏆🎉");
+    window.location.href = 'index.html';  // Redirige al index
+    return;
+  }
+
+  foundCount = 0;  // Reiniciamos el contador de objetos encontrados
+  currentLevel++;  // Aumentamos el nivel
+  targetCount = currentLevel;  // El objetivo es igual al nivel (nivel 1 = 1, nivel 2 = 2, etc.)
+  document.getElementById("levelUp").classList.add("hidden");  // Ocultamos el botón de nivel siguiente
+  document.getElementById("levelText").innerText = `Nivel ${currentLevel}: Encuentra ${targetCount} 🐱`;  // Actualizamos el texto del nivel
+  generateItems(currentLevel);  // Generamos los objetos para el siguiente nivel
+}
 
     // Iniciamos el juego
     startGame();
