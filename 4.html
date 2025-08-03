@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Aprendamos el número 4</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff0f5;
+      text-align: center;
+      padding: 20px;
+    }
+    .hidden {
+      display: none;
+    }
+    .color-box {
+      width: 70px;
+      height: 70px;
+      display: inline-block;
+      margin: 10px;
+      background-color: gray;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.2s ease-in-out;
+    }
+    .color-box.revealed {
+      transform: scale(1.1);
+    }
+    canvas {
+      border: 2px solid #000;
+      background-color: #fff;
+      width: 90%;
+      max-width: 300px;
+      height: auto;
+      touch-action: none;
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #9933cc;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #7a28a6;
+    }
+    footer {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #444;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="intro">
+    <h1>¡Hola!</h1>
+    <p>Hoy vamos a aprender el número <strong>4</strong> con colores 🎨</p>
+    <button onclick="startGame()">¡Empezar!</button>
+  </div>
+
+  <div id="game" class="hidden">
+    <h2>Descubre 4 colores ocultos 🎨</h2>
+    <p>Haz clic en las cajas para descubrir el color</p>
+    <div id="colorBoxes"></div>
+  </div>
+
+  <div id="recognition" class="hidden">
+    <h2>¡Muy bien!</h2>
+    <p>Este es el número:</p>
+    <h1 style="font-size: 120px; color: gold;">4</h1>
+    <button onclick="showTrace()">¡Quiero escribir el número 4!</button>
+  </div>
+
+  <div id="trace" class="hidden">
+    <h2>Traza el número 4 con tu dedo o mouse</h2>
+    <canvas id="canvas" width="300" height="300"></canvas>
+    <br>
+    <button onclick="showCongrats()">¡Terminé!</button>
+  </div>
+
+  <div id="congrats" class="hidden">
+    <h2>¡Muy bien! 🎉</h2>
+    <p>Ya sabes contar, reconocer y escribir el número 4.</p>
+    <button onclick="location.href='index.html'">Volver al inicio</button>
+  </div>
+
+  <footer>
+    <p>Solución informática por <strong>ESMED</strong></p>
+    <p>Instagram: <a href="https://instagram.com/ESMED0305" target="_blank">@ESMED0305</a></p>
+  </footer>
+
+  <script>
+    function startGame() {
+      document.getElementById("intro").classList.add("hidden");
+      document.getElementById("game").classList.remove("hidden");
+
+      const colors = ["red", "blue", "green", "orange"];
+      const container = document.getElementById("colorBoxes");
+      container.innerHTML = "";
+      let revealed = 0;
+
+      for (let i = 0; i < 4; i++) {
+        const box = document.createElement("div");
+        box.className = "color-box";
+        box.onclick = () => {
+          if (!box.classList.contains("revealed")) {
+            box.style.backgroundColor = colors[i];
+            box.classList.add("revealed");
+            revealed++;
+            if (revealed === 4) {
+              setTimeout(() => {
+                alert("¡Has descubierto los 4 colores!");
+                showRecognition();
+              }, 300);
+            }
+          }
+        };
+        container.appendChild(box);
+      }
+    }
+
+    function showRecognition() {
+      document.getElementById("game").classList.add("hidden");
+      document.getElementById("recognition").classList.remove("hidden");
+    }
+
+    function showTrace() {
+      document.getElementById("recognition").classList.add("hidden");
+      document.getElementById("trace").classList.remove("hidden");
+
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+      let drawing = false;
+
+      function draw(x, y) {
+        ctx.fillStyle = "blue";
+        ctx.beginPath();
+        ctx.arc(x, y, 5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      canvas.addEventListener("mousedown", () => drawing = true);
+      canvas.addEventListener("mouseup", () => drawing = false);
+      canvas.addEventListener("mousemove", (e) => {
+        if (drawing) draw(e.offsetX, e.offsetY);
+      });
+
+      canvas.addEventListener("touchstart", () => drawing = true);
+      canvas.addEventListener("touchend", () => drawing = false);
+      canvas.addEventListener("touchmove", (e) => {
+        if (drawing) {
+          const rect = canvas.getBoundingClientRect();
+          const touch = e.touches[0];
+          draw(touch.clientX - rect.left, touch.clientY - rect.top);
+        }
+        e.preventDefault();
+      }, { passive: false });
+    }
+
+    function showCongrats() {
+      document.getElementById("trace").classList.add("hidden");
+      document.getElementById("congrats").classList.remove("hidden");
+    }
+  </script>
+
+</body>
+</html>

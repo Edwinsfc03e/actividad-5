@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Aprendamos el número 6</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0fff4;
+      text-align: center;
+      padding: 20px;
+    }
+    .hidden {
+      display: none;
+    }
+    .star {
+      font-size: 50px;
+      margin: 15px;
+      cursor: pointer;
+      transition: transform 0.2s ease-in-out;
+    }
+    .star.clicked {
+      opacity: 0.3;
+      transform: scale(0.8);
+      pointer-events: none;
+    }
+    canvas {
+      border: 2px solid #000;
+      background-color: #fff;
+      width: 90%;
+      max-width: 300px;
+      height: auto;
+      touch-action: none;
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #1e7e34;
+    }
+    footer {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #444;
+    }
+    audio {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="intro">
+    <h1>¡Hola!</h1>
+    <p>Vamos a aprender el número <strong>6</strong> con una canción 🎵</p>
+    <button onclick="showSong()">¡Escuchar canción!</button>
+  </div>
+
+  <div id="song" class="hidden">
+    <h2>🎶 Canción del número 6 🎶</h2>
+    <audio controls autoplay>
+      <source src="cancion-numero-6.mp3" type="audio/mpeg">
+      Tu navegador no soporta el audio.
+    </audio>
+    <p>Cuando termines, haz clic para continuar</p>
+    <button onclick="showGame()">Seguir</button>
+  </div>
+
+  <div id="game" class="hidden">
+    <h2>Encuentra las 6 estrellas ✨</h2>
+    <p>Haz clic en cada una para encontrarlas todas</p>
+    <div id="stars"></div>
+  </div>
+
+  <div id="trace" class="hidden">
+    <h2>Este es el número:</h2>
+    <h1 style="font-size: 120px; color: gold;">6</h1>
+    <p>¡Traza el número 6 con tu dedo o el mouse!</p>
+    <canvas id="canvas" width="300" height="300"></canvas>
+    <br>
+    <button onclick="showCongrats()">¡Terminé!</button>
+  </div>
+
+  <div id="congrats" class="hidden">
+    <h2>¡Excelente trabajo! 🎉</h2>
+    <p>Ya sabes cantar, reconocer y escribir el número 6.</p>
+    <button onclick="location.href='index.html'">Volver al inicio</button>
+  </div>
+
+  <footer>
+    <p>Solución informática por <strong>ESMED</strong></p>
+    <p>Instagram: <a href="https://instagram.com/ESMED0305" target="_blank">@ESMED0305</a></p>
+  </footer>
+
+  <script>
+    function showSong() {
+      document.getElementById("intro").classList.add("hidden");
+      document.getElementById("song").classList.remove("hidden");
+    }
+
+    function showGame() {
+      document.getElementById("song").classList.add("hidden");
+      document.getElementById("game").classList.remove("hidden");
+
+      const starsDiv = document.getElementById("stars");
+      starsDiv.innerHTML = "";
+      let count = 0;
+
+      for (let i = 0; i < 6; i++) {
+        const star = document.createElement("span");
+        star.className = "star";
+        star.textContent = "✨";
+        star.onclick = () => {
+          star.classList.add("clicked");
+          count++;
+          if (count === 6) {
+            setTimeout(() => {
+              alert("¡Encontraste las 6 estrellas!");
+              showTrace();
+            }, 300);
+          }
+        };
+        starsDiv.appendChild(star);
+      }
+    }
+
+    function showTrace() {
+      document.getElementById("game").classList.add("hidden");
+      document.getElementById("trace").classList.remove("hidden");
+
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+      let drawing = false;
+
+      function draw(x, y) {
+        ctx.fillStyle = "blue";
+        ctx.beginPath();
+        ctx.arc(x, y, 5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      canvas.addEventListener("mousedown", () => drawing = true);
+      canvas.addEventListener("mouseup", () => drawing = false);
+      canvas.addEventListener("mousemove", (e) => {
+        if (drawing) draw(e.offsetX, e.offsetY);
+      });
+
+      canvas.addEventListener("touchstart", () => drawing = true);
+      canvas.addEventListener("touchend", () => drawing = false);
+      canvas.addEventListener("touchmove", (e) => {
+        if (drawing) {
+          const rect = canvas.getBoundingClientRect();
+          const touch = e.touches[0];
+          draw(touch.clientX - rect.left, touch.clientY - rect.top);
+        }
+        e.preventDefault();
+      }, { passive: false });
+    }
+
+    function showCongrats() {
+      document.getElementById("trace").classList.add("hidden");
+      document.getElementById("congrats").classList.remove("hidden");
+    }
+  </script>
+
+</body>
+</html>

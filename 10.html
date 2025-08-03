@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Aprendamos el número 10</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff8e1;
+      text-align: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+    .hidden {
+      display: none;
+    }
+    .group {
+      display: inline-block;
+      border: 2px dashed #ccc;
+      padding: 10px;
+      margin: 10px;
+      cursor: pointer;
+    }
+    .group span {
+      font-size: 24px;
+    }
+    canvas {
+      border: 2px solid #000;
+      background-color: #fff;
+      width: 90%;
+      max-width: 300px;
+      height: auto;
+      touch-action: none;
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #00a86b;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #007a4a;
+    }
+    #fireworks {
+      width: 100%;
+      height: 200px;
+      background: radial-gradient(#222, #000);
+      position: relative;
+      overflow: hidden;
+    }
+    .firework {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      animation: explode 1s ease-out forwards;
+    }
+    @keyframes explode {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-150px) scale(3); opacity: 0; }
+    }
+    footer {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #444;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="intro">
+    <h1>¡Último número!</h1>
+    <p>Hoy aprenderemos el <strong>número 10</strong> con una actividad especial 🎊</p>
+    <button onclick="startGame()">¡Empezar actividad!</button>
+  </div>
+
+  <div id="select" class="hidden">
+    <h2>¿Cuál grupo tiene 10 objetos?</h2>
+    <div id="options"></div>
+  </div>
+
+  <div id="recognition" class="hidden">
+    <h2>¡Muy bien!</h2>
+    <p>Este es el número que aprendiste:</p>
+    <h1 style="font-size: 120px; color: orange;">10</h1>
+    <button onclick="showTrace()">¡Quiero escribirlo!</button>
+  </div>
+
+  <div id="trace" class="hidden">
+    <h2>Traza el número 10</h2>
+    <canvas id="canvas" width="300" height="300"></canvas>
+    <br>
+    <button onclick="showFinal()">¡Terminé!</button>
+  </div>
+
+  <div id="celebration" class="hidden">
+    <h2>¡Felicidades! 🎉</h2>
+    <p>Completaste todos los números del 1 al 10</p>
+    <div id="fireworks"></div>
+    <br>
+    <button onclick="location.href='index.html'">Volver al inicio</button>
+  </div>
+
+  <footer>
+    <p>Solución informática por <strong>ESMED</strong></p>
+    <p>Instagram: <a href="https://instagram.com/ESMED0305" target="_blank">@ESMED0305</a></p>
+  </footer>
+
+  <script>
+    function startGame() {
+      document.getElementById("intro").classList.add("hidden");
+      document.getElementById("select").classList.remove("hidden");
+
+      const options = document.getElementById("options");
+      options.innerHTML = "";
+
+      const counts = [6, 8, 10, 7];
+      const emojis = "⭐";
+
+      counts.sort(() => Math.random() - 0.5); // shuffle
+
+      counts.forEach((count) => {
+        const div = document.createElement("div");
+        div.className = "group";
+        for (let i = 0; i < count; i++) {
+          const star = document.createElement("span");
+          star.textContent = emojis;
+          div.appendChild(star);
+        }
+        div.onclick = () => {
+          if (count === 10) {
+            alert("¡Correcto! Ese grupo tiene 10 ⭐");
+            showRecognition();
+          } else {
+            alert("Ups, intenta otro grupo.");
+          }
+        };
+        options.appendChild(div);
+      });
+    }
+
+    function showRecognition() {
+      document.getElementById("select").classList.add("hidden");
+      document.getElementById("recognition").classList.remove("hidden");
+    }
+
+    function showTrace() {
+      document.getElementById("recognition").classList.add("hidden");
+      document.getElementById("trace").classList.remove("hidden");
+
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+      let drawing = false;
+
+      function draw(x, y) {
+        ctx.fillStyle = "blue";
+        ctx.beginPath();
+        ctx.arc(x, y, 5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      canvas.addEventListener("mousedown", () => drawing = true);
+      canvas.addEventListener("mouseup", () => drawing = false);
+      canvas.addEventListener("mousemove", (e) => {
+        if (drawing) draw(e.offsetX, e.offsetY);
+      });
+
+      canvas.addEventListener("touchstart", () => drawing = true);
+      canvas.addEventListener("touchend", () => drawing = false);
+      canvas.addEventListener("touchmove", (e) => {
+        if (drawing) {
+          const rect = canvas.getBoundingClientRect();
+          const touch = e.touches[0];
+          draw(touch.clientX - rect.left, touch.clientY - rect.top);
+        }
+        e.preventDefault();
+      }, { passive: false });
+    }
+
+    function showFinal() {
+      document.getElementById("trace").classList.add("hidden");
+      document.getElementById("celebration").classList.remove("hidden");
+      launchFireworks();
+    }
+
+    function launchFireworks() {
+      const container = document.getElementById("fireworks");
+      for (let i = 0; i < 30; i++) {
+        const fw = document.createElement("div");
+        fw.className = "firework";
+        fw.style.left = Math.random() * 100 + "%";
+        fw.style.bottom = "0px";
+        fw.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 60%)`;
+        fw.style.animationDelay = `${Math.random()}s`;
+        container.appendChild(fw);
+        setTimeout(() => container.removeChild(fw), 1500);
+      }
+    }
+  </script>
+
+</body>
+</html>

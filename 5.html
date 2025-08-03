@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aprendamos el número 5</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #cceeff;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .apple {
+      font-size: 40px;
+      cursor: pointer;
+      margin: 10px;
+    }
+
+    canvas {
+      border: 2px solid #000;
+      background-color: #fff;
+      width: 90%;
+      max-width: 300px;
+      height: auto;
+      touch-action: none; /* Evita scroll al dibujar */
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 5px;
+      background-color: #3399ff;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #287acc;
+    }
+
+    @media (max-width: 600px) {
+      h1, h2 {
+        font-size: 1.5em;
+      }
+
+      button {
+        font-size: 14px;
+        padding: 8px 16px;
+      }
+
+      .apple {
+        font-size: 30px;
+        margin: 5px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="intro">
+    <h1>¡Hola!</h1>
+    <p>Hoy vamos a aprender sobre el número <strong>5</strong>. ¿Estás listo?</p>
+    <button onclick="showCount()">¡Sí, vamos!</button>
+  </div>
+
+  <div id="count" class="hidden">
+    <h2>Haz clic en cada manzana para contar hasta 5 🍎</h2>
+    <div id="apples"></div>
+  </div>
+
+  <div id="recognition" class="hidden">
+    <h2>¡Este es el número 5!</h2>
+    <h1 style="font-size: 100px; color: gold;">5</h1>
+    <button onclick="showTrace()">¡Quiero escribir el número 5!</button>
+  </div>
+
+  <div id="trace" class="hidden">
+    <h2>Traza el número 5 con el dedo o el mouse</h2>
+    <canvas id="canvas" width="300" height="300"></canvas>
+    <br>
+    <button onclick="showCongrats()">¡Terminé!</button>
+  </div>
+
+  <div id="congrats" class="hidden">
+    <h2>¡Excelente trabajo! 🎉</h2>
+    <p>Ya sabes contar y escribir el número 5.</p>
+    <button onclick="location.reload()">Repetir actividad</button>
+  </div>
+
+  <script>
+    function showCount() {
+      document.getElementById("intro").classList.add("hidden");
+      document.getElementById("count").classList.remove("hidden");
+
+      const applesDiv = document.getElementById("apples");
+      applesDiv.innerHTML = ""; // Limpiar por si se repite
+
+      let count = 0;
+      for (let i = 0; i < 5; i++) {
+        const apple = document.createElement("span");
+        apple.textContent = "🍎";
+        apple.className = "apple";
+        apple.onclick = () => {
+          apple.style.opacity = "0.3";
+          apple.onclick = null;
+          count++;
+          if (count === 5) {
+            alert("¡Contaste 5 manzanas!");
+            showRecognition();
+          }
+        };
+        applesDiv.appendChild(apple);
+      }
+    }
+
+    function showRecognition() {
+      document.getElementById("count").classList.add("hidden");
+      document.getElementById("recognition").classList.remove("hidden");
+    }
+
+    function showTrace() {
+      document.getElementById("recognition").classList.add("hidden");
+      document.getElementById("trace").classList.remove("hidden");
+
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+
+      let drawing = false;
+
+      function draw(x, y) {
+        ctx.fillStyle = "blue";
+        ctx.beginPath();
+        ctx.arc(x, y, 5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Soporte mouse
+      canvas.addEventListener("mousedown", () => drawing = true);
+      canvas.addEventListener("mouseup", () => drawing = false);
+      canvas.addEventListener("mousemove", (e) => {
+        if (drawing) draw(e.offsetX, e.offsetY);
+      });
+
+      // Soporte táctil
+      canvas.addEventListener("touchstart", (e) => {
+        drawing = true;
+      });
+
+      canvas.addEventListener("touchend", () => {
+        drawing = false;
+      });
+
+      canvas.addEventListener("touchmove", (e) => {
+        if (drawing) {
+          const rect = canvas.getBoundingClientRect();
+          const touch = e.touches[0];
+          const x = touch.clientX - rect.left;
+          const y = touch.clientY - rect.top;
+          draw(x, y);
+        }
+        e.preventDefault(); // Evita scroll al trazar
+      }, { passive: false });
+    }
+
+    function showCongrats() {
+      document.getElementById("trace").classList.add("hidden");
+      document.getElementById("congrats").classList.remove("hidden");
+    }
+  </script>
+  <footer style="margin-top: 40px; font-size: 14px; color: #333;">
+    <p>Solución informática por <strong>ESMED</strong></p>
+    <p>Síguenos en Instagram: <a href="https://instagram.com/ESMED0305" target="_blank" style="color: #1a73e8;">@ESMED0305</a></p>
+  </footer>
+
+</body>
+</html>

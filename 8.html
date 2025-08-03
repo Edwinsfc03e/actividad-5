@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Aprendamos el número 8</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f8ff;
+      text-align: center;
+      padding: 20px;
+    }
+    .hidden {
+      display: none;
+    }
+    .shape {
+      display: inline-block;
+      width: 60px;
+      height: 60px;
+      margin: 10px;
+      background-color: #aaa;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .shape.clicked {
+      opacity: 0.3;
+      transform: scale(0.9);
+      pointer-events: none;
+    }
+    .circle { border-radius: 50%; background-color: #ff6666; }
+    .square { background-color: #66ccff; }
+    .triangle {
+      width: 0;
+      height: 0;
+      border-left: 30px solid transparent;
+      border-right: 30px solid transparent;
+      border-bottom: 60px solid #66ff66;
+      background: none;
+    }
+    canvas {
+      border: 2px solid #000;
+      background-color: #fff;
+      width: 90%;
+      max-width: 300px;
+      height: auto;
+      touch-action: none;
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #ff9933;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #cc7a29;
+    }
+    footer {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #444;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="intro">
+    <h1>¡Hola!</h1>
+    <p>Hoy vamos a aprender el número <strong>8</strong> con formas geométricas 🟠</p>
+    <button onclick="startShapes()">¡Vamos!</button>
+  </div>
+
+  <div id="shapes" class="hidden">
+    <h2>Encuentra 8 formas geométricas</h2>
+    <p>Haz clic en cada forma para contar hasta 8</p>
+    <div id="shapeContainer"></div>
+  </div>
+
+  <div id="recognition" class="hidden">
+    <h2>¡Muy bien!</h2>
+    <p>Este es el número que aprendiste:</p>
+    <h1 style="font-size: 120px; color: gold;">8</h1>
+    <button onclick="showTrace()">¡Ahora quiero escribirlo!</button>
+  </div>
+
+  <div id="trace" class="hidden">
+    <h2>Traza el número 8</h2>
+    <canvas id="canvas" width="300" height="300"></canvas>
+    <br>
+    <button onclick="showCongrats()">¡Terminé!</button>
+  </div>
+
+  <div id="congrats" class="hidden">
+    <h2>¡Lo lograste! 🎉</h2>
+    <p>Ya sabes contar, reconocer y escribir el número 8.</p>
+    <button onclick="location.href='index.html'">Volver al inicio</button>
+  </div>
+
+  <footer>
+    <p>Solución informática por <strong>ESMED</strong></p>
+    <p>Instagram: <a href="https://instagram.com/ESMED0305" target="_blank">@ESMED0305</a></p>
+  </footer>
+
+  <script>
+    function startShapes() {
+      document.getElementById("intro").classList.add("hidden");
+      document.getElementById("shapes").classList.remove("hidden");
+
+      const container = document.getElementById("shapeContainer");
+      container.innerHTML = "";
+
+      const types = ["circle", "square", "triangle"];
+      let count = 0;
+
+      for (let i = 0; i < 8; i++) {
+        const shapeType = types[Math.floor(Math.random() * types.length)];
+        const shape = document.createElement("div");
+        shape.className = "shape " + shapeType;
+        shape.onclick = () => {
+          shape.classList.add("clicked");
+          count++;
+          if (count === 8) {
+            setTimeout(() => {
+              alert("¡Encontraste las 8 formas!");
+              showRecognition();
+            }, 300);
+          }
+        };
+        container.appendChild(shape);
+      }
+    }
+
+    function showRecognition() {
+      document.getElementById("shapes").classList.add("hidden");
+      document.getElementById("recognition").classList.remove("hidden");
+    }
+
+    function showTrace() {
+      document.getElementById("recognition").classList.add("hidden");
+      document.getElementById("trace").classList.remove("hidden");
+
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+      let drawing = false;
+
+      function draw(x, y) {
+        ctx.fillStyle = "blue";
+        ctx.beginPath();
+        ctx.arc(x, y, 5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      canvas.addEventListener("mousedown", () => drawing = true);
+      canvas.addEventListener("mouseup", () => drawing = false);
+      canvas.addEventListener("mousemove", (e) => {
+        if (drawing) draw(e.offsetX, e.offsetY);
+      });
+
+      canvas.addEventListener("touchstart", () => drawing = true);
+      canvas.addEventListener("touchend", () => drawing = false);
+      canvas.addEventListener("touchmove", (e) => {
+        if (drawing) {
+          const rect = canvas.getBoundingClientRect();
+          const touch = e.touches[0];
+          draw(touch.clientX - rect.left, touch.clientY - rect.top);
+        }
+        e.preventDefault();
+      }, { passive: false });
+    }
+
+    function showCongrats() {
+      document.getElementById("trace").classList.add("hidden");
+      document.getElementById("congrats").classList.remove("hidden");
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aprendamos el número 2</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #fffbe0;
+      text-align: center;
+      padding: 20px;
+    }
+    .hidden {
+      display: none;
+    }
+    .animal {
+      font-size: 60px;
+      cursor: pointer;
+      margin: 20px;
+      transition: transform 0.2s;
+    }
+    .animal:hover {
+      transform: scale(1.2);
+    }
+    canvas {
+      border: 2px solid #000;
+      background-color: #fff;
+      width: 90%;
+      max-width: 300px;
+      height: auto;
+      touch-action: none;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-top: 20px;
+      background-color: #ff9900;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #e68500;
+    }
+    footer {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="intro">
+    <h1>¡Bienvenido!</h1>
+    <p>Hoy aprenderemos el número <strong>2</strong>.</p>
+    <button onclick="showGame()">¡Comenzar!</button>
+  </div>
+
+  <div id="game" class="hidden">
+    <h2>Haz clic en los 2 gatitos 🐱</h2>
+    <div id="animals"></div>
+  </div>
+
+  <div id="recognition" class="hidden">
+    <h2>¡Muy bien!</h2>
+    <p>Este es el número:</p>
+    <h1 style="font-size: 120px; color: gold;">2</h1>
+    <button onclick="showTrace()">¡Ahora quiero escribirlo!</button>
+  </div>
+
+  <div id="trace" class="hidden">
+    <h2>Traza el número 2 con tu dedo o el mouse</h2>
+    <canvas id="canvas" width="300" height="300"></canvas>
+    <br>
+    <button onclick="showCongrats()">¡Terminé!</button>
+  </div>
+
+  <div id="congrats" class="hidden">
+    <h2>¡Muy bien! 🎉</h2>
+    <p>Ahora sabes contar y escribir el número 2.</p>
+    <button onclick="location.href='index.html'">Volver al inicio</button>
+  </div>
+
+  <footer>
+    <p>Solución informática por <strong>ESMED</strong></p>
+    <p>Síguenos en Instagram: <a href="https://instagram.com/ESMED0305" target="_blank">@ESMED0305</a></p>
+  </footer>
+
+  <script>
+    function showGame() {
+      document.getElementById("intro").classList.add("hidden");
+      document.getElementById("game").classList.remove("hidden");
+
+      const animalsDiv = document.getElementById("animals");
+      animalsDiv.innerHTML = "";
+      let count = 0;
+
+      for (let i = 0; i < 2; i++) {
+        const animal = document.createElement("span");
+        animal.className = "animal";
+        animal.textContent = "🐱";
+        animal.onclick = () => {
+          animal.style.opacity = "0.3";
+          animal.onclick = null;
+          count++;
+          if (count === 2) {
+            alert("¡Has encontrado los 2 gatitos!");
+            showRecognition();
+          }
+        };
+        animalsDiv.appendChild(animal);
+      }
+    }
+
+    function showRecognition() {
+      document.getElementById("game").classList.add("hidden");
+      document.getElementById("recognition").classList.remove("hidden");
+    }
+
+    function showTrace() {
+      document.getElementById("recognition").classList.add("hidden");
+      document.getElementById("trace").classList.remove("hidden");
+
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+      let drawing = false;
+
+      function draw(x, y) {
+        ctx.fillStyle = "blue";
+        ctx.beginPath();
+        ctx.arc(x, y, 5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      canvas.addEventListener("mousedown", () => drawing = true);
+      canvas.addEventListener("mouseup", () => drawing = false);
+      canvas.addEventListener("mousemove", (e) => {
+        if (drawing) draw(e.offsetX, e.offsetY);
+      });
+
+      canvas.addEventListener("touchstart", () => drawing = true);
+      canvas.addEventListener("touchend", () => drawing = false);
+      canvas.addEventListener("touchmove", (e) => {
+        if (drawing) {
+          const rect = canvas.getBoundingClientRect();
+          const touch = e.touches[0];
+          draw(touch.clientX - rect.left, touch.clientY - rect.top);
+        }
+        e.preventDefault();
+      }, { passive: false });
+    }
+
+    function showCongrats() {
+      document.getElementById("trace").classList.add("hidden");
+      document.getElementById("congrats").classList.remove("hidden");
+    }
+  </script>
+
+</body>
+</html>
