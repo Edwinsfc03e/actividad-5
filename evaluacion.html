@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>¡Búsqueda del Número!</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      color: #ff6347;
+    }
+    .game-container {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .item {
+      width: 60px;
+      height: 60px;
+      margin: 10px;
+      display: inline-block;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .item:hover {
+      transform: scale(1.2);
+    }
+    .hidden {
+      display: none;
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #00a86b;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #007a4a;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>¡Búsqueda del Número!</h1>
+  <p>Encuentra los objetos correctos para avanzar al siguiente nivel.</p>
+  <p id="levelText">Nivel 1: Encuentra 1 gato 🐱</p>
+
+  <div id="gameContainer" class="game-container">
+    <!-- Las imágenes de los objetos aparecerán aquí -->
+  </div>
+
+  <div id="levelUp" class="hidden">
+    <h2>¡Bien hecho! 🎉</h2>
+    <p>Pasaste al siguiente nivel.</p>
+    <button onclick="nextLevel()">Nivel Siguiente</button>
+  </div>
+
+  <footer>
+    <p>Solución informática por <strong>ESMED</strong></p>
+    <p>Instagram: <a href="https://instagram.com/ESMED0305" target="_blank">@ESMED0305</a></p>
+  </footer>
+
+  <script>
+    // Variables para el juego
+    let currentLevel = 1;  // Comenzamos en el nivel 1
+    let targetCount = 1;    // El objetivo es 1 objeto al principio
+    let foundCount = 0;     // Contador de objetos encontrados
+
+    // Inicializamos el juego
+    function startGame() {
+      generateItems(currentLevel);  // Llama a la función para generar objetos para el nivel actual
+    }
+
+    // Genera los objetos en el juego (dependiendo del nivel)
+    function generateItems(level) {
+      const gameContainer = document.getElementById("gameContainer");
+      gameContainer.innerHTML = ""; // Limpiar el contenedor antes de agregar nuevos elementos
+
+      const objects = [];
+      for (let i = 0; i < level * 5; i++) {
+        let obj;
+        if (i < targetCount) {
+          obj = { type: "gato", image: "https://example.com/cat.png", found: false }; // Representación del objeto (gato)
+        } else {
+          obj = { type: "perro", image: "https://example.com/dog.png", found: false }; // Otro objeto (perro)
+        }
+        objects.push(obj);
+      }
+
+      // Desordenamos los objetos para que no estén en orden
+      objects.sort(() => Math.random() - 0.5);
+
+      // Creamos los elementos visuales
+      objects.forEach(item => {
+        const itemDiv = document.createElement("div");
+        itemDiv.className = "item";
+        itemDiv.onclick = () => {
+          if (!item.found) {
+            if (item.type === "gato") {
+              itemDiv.style.opacity = 0.5;
+              item.found = true;
+              foundCount++;
+              checkProgress();  // Comprobamos si se encontró todos los objetos correctos
+            } else {
+              alert("¡No es el objeto correcto! Sigue buscando.");
+            }
+          }
+        };
+        const img = document.createElement("img");
+        img.src = item.image;
+        img.alt = item.type;
+        img.style.width = "100%";
+        img.style.height = "100%";
+        itemDiv.appendChild(img);
+        gameContainer.appendChild(itemDiv);
+      });
+    }
+
+    // Verificamos el progreso del jugador
+    function checkProgress() {
+      if (foundCount === targetCount) {
+        document.getElementById("levelText").innerText = `¡Nivel ${currentLevel} completado!`;
+        document.getElementById("levelUp").classList.remove("hidden");  // Mostramos el botón para continuar al siguiente nivel
+      }
+    }
+
+    // Pasar al siguiente nivel
+    function nextLevel() {
+      foundCount = 0;  // Reiniciamos el contador de objetos encontrados
+      currentLevel++;  // Aumentamos el nivel
+      targetCount = currentLevel;  // El objetivo es igual al nivel (nivel 1 = 1, nivel 2 = 2, etc.)
+      document.getElementById("levelUp").classList.add("hidden");  // Ocultamos el botón de nivel siguiente
+      document.getElementById("levelText").innerText = `Nivel ${currentLevel}: Encuentra ${targetCount} gato${targetCount > 1 ? "s" : ""}`;  // Actualizamos el texto del nivel
+      generateItems(currentLevel);  // Generamos los objetos para el siguiente nivel
+    }
+
+    // Iniciamos el juego
+    startGame();
+  </script>
+
+</body>
+</html>
