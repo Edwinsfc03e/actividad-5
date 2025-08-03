@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aprendamos el número 5</title>
   <style>
     body {
@@ -10,22 +11,55 @@
       text-align: center;
       padding: 20px;
     }
+
     .hidden {
       display: none;
     }
+
     .apple {
       font-size: 40px;
       cursor: pointer;
       margin: 10px;
     }
+
     canvas {
       border: 2px solid #000;
       background-color: #fff;
+      width: 90%;
+      max-width: 300px;
+      height: auto;
+      touch-action: none; /* Evita scroll al dibujar */
     }
+
     button {
       padding: 10px 20px;
       font-size: 16px;
       margin-top: 20px;
+      border: none;
+      border-radius: 5px;
+      background-color: #3399ff;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #287acc;
+    }
+
+    @media (max-width: 600px) {
+      h1, h2 {
+        font-size: 1.5em;
+      }
+
+      button {
+        font-size: 14px;
+        padding: 8px 16px;
+      }
+
+      .apple {
+        font-size: 30px;
+        margin: 5px;
+      }
     }
   </style>
 </head>
@@ -49,7 +83,7 @@
   </div>
 
   <div id="trace" class="hidden">
-    <h2>Traza el número 5 con el mouse</h2>
+    <h2>Traza el número 5 con el dedo o el mouse</h2>
     <canvas id="canvas" width="300" height="300"></canvas>
     <br>
     <button onclick="showCongrats()">¡Terminé!</button>
@@ -67,6 +101,8 @@
       document.getElementById("count").classList.remove("hidden");
 
       const applesDiv = document.getElementById("apples");
+      applesDiv.innerHTML = ""; // Limpiar por si se repite
+
       let count = 0;
       for (let i = 0; i < 5; i++) {
         const apple = document.createElement("span");
@@ -96,16 +132,42 @@
 
       const canvas = document.getElementById("canvas");
       const ctx = canvas.getContext("2d");
-      canvas.onmousedown = () => canvas.isDrawing = true;
-      canvas.onmouseup = () => canvas.isDrawing = false;
-      canvas.onmousemove = (e) => {
-        if (canvas.isDrawing) {
-          ctx.fillStyle = "blue";
-          ctx.beginPath();
-          ctx.arc(e.offsetX, e.offsetY, 5, 0, Math.PI * 2);
-          ctx.fill();
+
+      let drawing = false;
+
+      function draw(x, y) {
+        ctx.fillStyle = "blue";
+        ctx.beginPath();
+        ctx.arc(x, y, 5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Soporte mouse
+      canvas.addEventListener("mousedown", () => drawing = true);
+      canvas.addEventListener("mouseup", () => drawing = false);
+      canvas.addEventListener("mousemove", (e) => {
+        if (drawing) draw(e.offsetX, e.offsetY);
+      });
+
+      // Soporte táctil
+      canvas.addEventListener("touchstart", (e) => {
+        drawing = true;
+      });
+
+      canvas.addEventListener("touchend", () => {
+        drawing = false;
+      });
+
+      canvas.addEventListener("touchmove", (e) => {
+        if (drawing) {
+          const rect = canvas.getBoundingClientRect();
+          const touch = e.touches[0];
+          const x = touch.clientX - rect.left;
+          const y = touch.clientY - rect.top;
+          draw(x, y);
         }
-      };
+        e.preventDefault(); // Evita scroll al trazar
+      }, { passive: false });
     }
 
     function showCongrats() {
