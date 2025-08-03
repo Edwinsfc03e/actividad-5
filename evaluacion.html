@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>¡Búsqueda del Número!</title>
+  <title>¡Búsqueda del Número! 🕵️‍♀️</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -21,6 +21,7 @@
       flex-wrap: wrap;
     }
     .item {
+      font-size: 60px;
       width: 60px;
       height: 60px;
       margin: 10px;
@@ -51,9 +52,9 @@
 </head>
 <body>
 
-  <h1>¡Búsqueda del Número!</h1>
-  <p>Encuentra los objetos correctos para avanzar al siguiente nivel.</p>
-  <p id="levelText">Nivel 1: Encuentra 1 gato 🐱</p>
+  <h1>¡Búsqueda del Número! 🕵️‍♂️</h1>
+  <p>Encuentra los objetos correctos para avanzar al siguiente nivel. ¡A jugar! 🎮</p>
+  <p id="levelText">Nivel 1: Encuentra 1 🐱</p>
 
   <div id="gameContainer" class="game-container">
     <!-- Las imágenes de los objetos aparecerán aquí -->
@@ -61,13 +62,13 @@
 
   <div id="levelUp" class="hidden">
     <h2>¡Bien hecho! 🎉</h2>
-    <p>Pasaste al siguiente nivel.</p>
-    <button onclick="nextLevel()">Nivel Siguiente</button>
+    <p>Pasaste al siguiente nivel. 🚀</p>
+    <button onclick="nextLevel()">Siguiente Nivel 🔽</button>
   </div>
 
   <footer>
     <p>Solución informática por <strong>ESMED</strong></p>
-    <p>Instagram: <a href="https://instagram.com/ESMED0305" target="_blank">@ESMED0305</a></p>
+    <p>Instagram: <a href="https://instagram.com/ESMED0305" target="_blank">📸 @ESMED0305</a></p>
   </footer>
 
   <script>
@@ -97,7 +98,6 @@
         objects.push(obj);
       }
 
-
       // Desordenamos los objetos para que no estén en orden
       objects.sort(() => Math.random() - 0.5);
 
@@ -113,16 +113,11 @@
               foundCount++;
               checkProgress();  // Comprobamos si se encontró todos los objetos correctos
             } else {
-              alert("¡No es el objeto correcto! Sigue buscando.");
+              alert("¡No es el objeto correcto! 😟 Sigue buscando.");
             }
           }
         };
-        const img = document.createElement("img");
-        img.src = item.image;
-        img.alt = item.type;
-        img.style.width = "100%";
-        img.style.height = "100%";
-        itemDiv.appendChild(img);
+        itemDiv.textContent = item.emoji;  // Usamos el emoji como contenido visual
         gameContainer.appendChild(itemDiv);
       });
     }
@@ -130,7 +125,7 @@
     // Verificamos el progreso del jugador
     function checkProgress() {
       if (foundCount === targetCount) {
-        document.getElementById("levelText").innerText = `¡Nivel ${currentLevel} completado!`;
+        document.getElementById("levelText").innerText = `¡Nivel ${currentLevel} completado! 🎉`;
         document.getElementById("levelUp").classList.remove("hidden");  // Mostramos el botón para continuar al siguiente nivel
       }
     }
@@ -141,7 +136,7 @@
       currentLevel++;  // Aumentamos el nivel
       targetCount = currentLevel;  // El objetivo es igual al nivel (nivel 1 = 1, nivel 2 = 2, etc.)
       document.getElementById("levelUp").classList.add("hidden");  // Ocultamos el botón de nivel siguiente
-      document.getElementById("levelText").innerText = `Nivel ${currentLevel}: Encuentra ${targetCount} gato${targetCount > 1 ? "s" : ""}`;  // Actualizamos el texto del nivel
+      document.getElementById("levelText").innerText = `Nivel ${currentLevel}: Encuentra ${targetCount} 🐱`;  // Actualizamos el texto del nivel
       generateItems(currentLevel);  // Generamos los objetos para el siguiente nivel
     }
 
