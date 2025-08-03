@@ -90,12 +90,13 @@
       for (let i = 0; i < level * 5; i++) {
         let obj;
         if (i < targetCount) {
-          obj = { type: "gato", image: "https://example.com/cat.png", found: false }; // Representación del objeto (gato)
+          obj = { type: "gato", emoji: "🐱", found: false }; // Representación del objeto (gato)
         } else {
-          obj = { type: "perro", image: "https://example.com/dog.png", found: false }; // Otro objeto (perro)
+          obj = { type: "perro", emoji: "🐶", found: false }; // Otro objeto (perro)
         }
         objects.push(obj);
       }
+
 
       // Desordenamos los objetos para que no estén en orden
       objects.sort(() => Math.random() - 0.5);
